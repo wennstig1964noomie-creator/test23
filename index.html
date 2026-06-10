@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Money</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  html, body {
+    background: #000;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #fff;
+  }
+
+  .phone {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    margin: 0 auto;
+    background: #000;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ---------- iOS status bar ---------- */
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px 0 36px;
+  }
+  .status-time {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .status-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px 18px 20px;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #1a1a1c;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 35% 30%, #f3c6a5 0 38%, transparent 39%),
+      radial-gradient(circle at 50% 110%, #a33b2e 0 70%, transparent 71%),
+      linear-gradient(160deg, #7d3b2a 0%, #c4593d 45%, #5d2a1e 100%);
+  }
+
+  /* ---------- Dimmed row behind the sheet ---------- */
+  .behind-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px 0 20px;
+    opacity: 0.55;
+  }
+  .locked-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #2a2a2c;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .cashtag {
+    font-size: 15px;
+    font-weight: 600;
+    color: #7c7c80;
+    padding-right: 4px;
+  }
+
+  /* ---------- Rising sheet ---------- */
+  .sheet {
+    position: absolute;
+    top: 178px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    border-radius: 40px 40px 0 0;
+    box-shadow: 0 -12px 30px rgba(0,0,0,0.85);
+    padding: 24px 14px 0 14px;
+  }
+
+  .card {
+    background: #161618;
+    border-radius: 24px;
+  }
+
+  /* ---------- Cash balance card ---------- */
+  .balance-card {
+    padding: 22px 20px 26px 20px;
+  }
+  .balance-top {
+    display: flex;
+    align-items: center;
+  }
+  .balance-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .balance-acct {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7c7c80;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+  }
+  .balance-chevron {
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+  }
+  .balance-eye {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  .balance-amount {
+    margin-top: 12px;
+    font-size: 54px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1;
+  }
+
+  /* ---------- Add money / Withdraw ---------- */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 56px;
+    padding: 0 6px;
+  }
+  .action-btn {
+    flex: 1;
+    height: 52px;
+    border: none;
+    border-radius: 999px;
+    background: #1d1d1f;
+    color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    cursor: pointer;
+  }
+
+  /* ---------- Green status card ---------- */
+  .status-card {
+    margin-top: 26px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+  }
+  .status-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .status-card-right {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* ---------- Savings card ---------- */
+  .savings-card {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  .savings-info .savings-label {
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .savings-info .savings-amount {
+    margin-top: 6px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .savings-info .savings-interest {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7c7c80;
+  }
+  .savings-icons {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+  }
+  .savings-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #232325;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- More for you ---------- */
+  .section-title {
+    margin-top: 34px;
+    padding: 0 6px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .more-sub {
+    margin-top: 22px;
+    padding: 0 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7c7c80;
+  }
+  .more-heading {
+    margin-top: 6px;
+    padding: 0 6px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+  }
+
+  /* ---------- Floating tab bar ---------- */
+  .tab-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0 36px 18px 36px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 38%, #000 100%);
+  }
+  .tab {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .tab-balance {
+    width: 72px;
+    height: 44px;
+    border-radius: 999px;
+    background: #2c2c2e;
+    color: #fff;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .tab-badge {
+    position: absolute;
+    top: -4px;
+    right: -7px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    background: #f5402c;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #000;
+    box-sizing: content-box;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- iOS status bar -->
+  <div class="status-bar">
+    <span class="status-time">12:06</span>
+    <span class="status-right">
+      <!-- cellular bars -->
+      <svg width="19" height="12" viewBox="0 0 19 12" fill="none">
+        <rect x="0"  y="8" width="3" height="4"  rx="1" fill="#fff"/>
+        <rect x="5"  y="5.5" width="3" height="6.5" rx="1" fill="#fff"/>
+        <rect x="10" y="3" width="3" height="9"  rx="1" fill="#fff"/>
+        <rect x="15" y="0" width="3" height="12" rx="1" fill="#5c5c5e"/>
+      </svg>
+      <!-- wifi -->
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff">
+        <path d="M8.5 12 6.2 9.6a3.4 3.4 0 0 1 4.6 0L8.5 12Z"/>
+        <path d="M4.4 7.7a6.2 6.2 0 0 1 8.2 0l-1.5 1.6a4.1 4.1 0 0 0-5.2 0L4.4 7.7Z"/>
+        <path d="M.9 4.1a11 11 0 0 1 15.2 0l-1.5 1.6a8.9 8.9 0 0 0-12.2 0L.9 4.1Z"/>
+      </svg>
+      <!-- battery with percentage -->
+      <svg width="30" height="14" viewBox="0 0 30 14">
+        <rect x="0.5" y="0.5" width="26" height="13" rx="3.5" fill="#3a3a3c" stroke="#3a3a3c"/>
+        <rect x="0.5" y="0.5" width="11" height="13" rx="3.5" fill="#9a9a9e"/>
+        <path d="M28 4.5v5a2.7 2.7 0 0 0 0-5Z" fill="#5c5c5e"/>
+        <text x="13" y="10.5" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#fff">32</text>
+      </svg>
+    </span>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Money</h1>
+    <div class="header-actions">
+      <button class="icon-btn" aria-label="Search">
+        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <circle cx="8" cy="8" r="6"/>
+          <line x1="12.6" y1="12.6" x2="17" y2="17"/>
+        </svg>
+      </button>
+      <button class="avatar" aria-label="Profile"></button>
+    </div>
+  </div>
+
+  <!-- Dimmed row peeking from behind the sheet -->
+  <div class="behind-row">
+    <span class="locked-pill">
+      <svg width="11" height="13" viewBox="0 0 11 13" fill="#fff">
+        <rect x="0" y="5" width="11" height="8" rx="2"/>
+        <path d="M2.5 6V4a3 3 0 0 1 6 0v2" fill="none" stroke="#fff" stroke-width="1.6"/>
+      </svg>
+      Locked
+    </span>
+    <span class="cashtag">$BentleeGreen</span>
+  </div>
+
+  <!-- Rising sheet -->
+  <div class="sheet">
+
+    <!-- Cash balance card -->
+    <div class="card balance-card">
+      <div class="balance-top">
+        <span class="balance-label">Cash balance</span>
+        <span class="balance-acct">&bull;&bull; 2456</span>
+        <span class="balance-chevron">
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="#7c7c80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1.5 1.5 6.5 6.5 1.5 11.5"/>
+          </svg>
+        </span>
+        <span class="balance-eye">
+          <svg width="24" height="22" viewBox="0 0 24 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+            <path d="M2 11s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 11 2 11Z"/>
+            <circle cx="12" cy="11" r="2.8"/>
+            <line x1="4" y1="20" x2="20" y2="2"/>
+          </svg>
+        </span>
+      </div>
+      <div class="balance-amount">$3.73</div>
+    </div>
+
+    <!-- Add money / Withdraw -->
+    <div class="action-row">
+      <button class="action-btn">Add money</button>
+      <button class="action-btn">Withdraw</button>
+    </div>
+
+    <!-- Green status -->
+    <div class="card status-card">
+      <span class="status-card-left">
+        <svg width="14" height="22" viewBox="0 0 14 22" fill="none">
+          <rect x="1" y="1" width="12" height="20" rx="4" stroke="#00d632" stroke-width="2"/>
+          <rect x="4.5" y="13" width="5" height="4.5" rx="1.5" fill="#00d632"/>
+        </svg>
+        Green status
+      </span>
+      <span class="status-card-right">In progress</span>
+    </div>
+
+    <!-- Savings -->
+    <div class="card savings-card">
+      <div class="savings-info">
+        <div class="savings-label">Savings</div>
+        <div class="savings-amount">$57.71</div>
+        <div class="savings-interest">Up to 3.25% interest</div>
+      </div>
+      <div class="savings-icons">
+        <div class="savings-icon">
+          <!-- stack of cash -->
+          <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
+            <rect x="2" y="12" width="20" height="6" rx="1.5" fill="#00d632"/>
+            <rect x="3.5" y="7.5" width="17" height="5" rx="1.5" fill="#00b22a" stroke="#0a0a0a" stroke-width="1"/>
+            <rect x="2" y="2" width="20" height="6" rx="1.5" fill="#00d632" stroke="#0a0a0a" stroke-width="1"/>
+            <circle cx="12" cy="5" r="1.6" fill="#0a0a0a"/>
+          </svg>
+        </div>
+        <div class="savings-icon">
+          <!-- money bag -->
+          <svg width="22" height="24" viewBox="0 0 22 24" fill="none">
+            <path d="M7 6h8l3 5a8 8 0 1 1-14 0l3-5Z" fill="#00d632"/>
+            <path d="M7.5 1.5h7L13 6H9L7.5 1.5Z" fill="#00d632" stroke="#0a0a0a" stroke-width="1"/>
+            <text x="11" y="17.5" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="9" font-weight="800" fill="#0a0a0a">$</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- More for you -->
+    <div class="section-title">More for you</div>
+    <div class="more-sub">Bitcoin and stocks</div>
+    <div class="more-heading">Buy and sell</div>
+  </div>
+
+  <!-- Floating tab bar -->
+  <div class="tab-bar">
+    <button class="tab tab-balance">$3</button>
+    <button class="tab" aria-label="Pay">
+      <svg width="26" height="34" viewBox="0 0 26 34" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round">
+        <path d="M19.5 8.5c-1.4-1.6-3.7-2.5-6.2-2.5-3.6 0-6.3 1.9-6.3 4.9 0 6.4 12.6 3.4 12.6 9.6 0 3.1-2.8 5-6.5 5-2.7 0-5.2-1-6.6-2.7"/>
+        <line x1="13" y1="1.5" x2="13" y2="6"/>
+        <line x1="13" y1="25.5" x2="13" y2="32.5"/>
+      </svg>
+    </button>
+    <button class="tab" aria-label="Activity">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
+        <circle cx="15" cy="15" r="12.5"/>
+        <path d="M15 8.5V15l4.5 3"/>
+      </svg>
+      <span class="tab-badge">4</span>
+    </button>
+  </div>
+
+</div>
+</body>
+</html>
