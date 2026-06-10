@@ -3,322 +3,366 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>Money</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  :root {
+    --bg: #000;
+    --card: #1a1a1b;
+    --card-press: #232325;
+    --pill: #1e1e20;
+    --pill-press: #2a2a2c;
+    --muted: #8e8e93;
+    --muted-2: #6f6f74;
+    --green: #00d632;
+    --red: #f5402c;
+    --hairline: rgba(255,255,255,0.045);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
-    background: #000;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #0c0c0e;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #fff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .phone {
     position: relative;
     width: 390px;
     height: 844px;
-    margin: 0 auto;
-    background: #000;
+    background: var(--bg);
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
   }
 
-  /* ---------- iOS status bar ---------- */
+  /* Desktop presentation: framed device. On phones it goes full-bleed. */
+  @media (min-width: 480px) and (min-height: 900px) {
+    .phone {
+      border-radius: 54px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 0 0 12px #050506,
+        0 0 0 13px rgba(255,255,255,0.06),
+        0 40px 80px rgba(0,0,0,0.8);
+    }
+  }
+  @media (max-width: 479px) {
+    .phone { width: 100vw; height: 100vh; }
+  }
+
+  button {
+    font-family: inherit;
+    color: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  /* Tap feedback — the single biggest "feels real" detail */
+  .pressable {
+    transition: transform 0.12s ease, filter 0.12s ease, background-color 0.12s ease;
+  }
+  .pressable:active {
+    transform: scale(0.96);
+    filter: brightness(1.25);
+  }
+
+  /* ============ iOS status bar ============ */
   .status-bar {
     height: 54px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    padding: 14px 28px 0 36px;
+    padding: 0 27px 6px 32px;
   }
   .status-time {
     font-size: 17px;
     font-weight: 600;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.4px;
+    font-feature-settings: "tnum";
+    min-width: 54px;
+    text-align: center;
   }
   .status-right {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
 
-  /* ---------- Header ---------- */
+  /* ============ Header ============ */
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 20px 18px 20px;
+    padding: 12px 20px 16px 20px;
   }
   .header h1 {
     font-size: 24px;
     font-weight: 700;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
   }
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
   .icon-btn {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: #1a1a1c;
-    border: none;
+    background: #1c1c1e;
+    box-shadow: inset 0 0 0 0.5px var(--hairline);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
   }
   .avatar {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    border: none;
     padding: 0;
-    cursor: pointer;
     overflow: hidden;
-    background:
-      radial-gradient(circle at 35% 30%, #f3c6a5 0 38%, transparent 39%),
-      radial-gradient(circle at 50% 110%, #a33b2e 0 70%, transparent 71%),
-      linear-gradient(160deg, #7d3b2a 0%, #c4593d 45%, #5d2a1e 100%);
+    display: block;
+    box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.1);
   }
+  .avatar svg { display: block; width: 100%; height: 100%; }
 
-  /* ---------- Dimmed row behind the sheet ---------- */
+  /* ============ Dimmed row behind the sheet ============ */
   .behind-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 20px 0 20px;
-    opacity: 0.55;
+    padding: 6px 20px 0 20px;
+    opacity: 0.5;
+    filter: brightness(0.9);
   }
   .locked-pill {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #2a2a2c;
+    gap: 7px;
+    background: #2c2c2e;
     border-radius: 999px;
-    padding: 9px 14px;
+    padding: 9px 14px 9px 12px;
     font-size: 13px;
     font-weight: 600;
-    color: #fff;
   }
   .cashtag {
     font-size: 15px;
     font-weight: 600;
-    color: #7c7c80;
+    color: var(--muted);
     padding-right: 4px;
+    letter-spacing: -0.1px;
   }
 
-  /* ---------- Rising sheet ---------- */
+  /* ============ Rising sheet ============ */
   .sheet {
     position: absolute;
-    top: 178px;
+    top: 176px;
     left: 0;
     right: 0;
     bottom: 0;
-    background: #000;
-    border-radius: 40px 40px 0 0;
-    box-shadow: 0 -12px 30px rgba(0,0,0,0.85);
+    background: var(--bg);
+    border-radius: 44px 44px 0 0;
+    /* soft drop onto the dimmed row + faint top hairline so the curve reads */
+    box-shadow:
+      0 -18px 36px rgba(0,0,0,0.9),
+      inset 0 1px 0 rgba(255,255,255,0.05);
     padding: 24px 14px 0 14px;
   }
 
   .card {
-    background: #161618;
-    border-radius: 24px;
+    background: linear-gradient(180deg, #1c1c1e 0%, #18181a 100%);
+    border-radius: 26px;
+    box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.06);
   }
 
-  /* ---------- Cash balance card ---------- */
-  .balance-card {
-    padding: 22px 20px 26px 20px;
-  }
-  .balance-top {
-    display: flex;
-    align-items: center;
-  }
-  .balance-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-  }
+  /* ============ Cash balance card ============ */
+  .balance-card { padding: 22px 20px 26px 20px; }
+  .balance-top { display: flex; align-items: center; }
+  .balance-label { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
   .balance-acct {
     font-size: 14px;
     font-weight: 600;
-    color: #7c7c80;
+    color: var(--muted);
     margin-left: 8px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    font-feature-settings: "tnum";
   }
-  .balance-chevron {
-    margin-left: 6px;
-    display: flex;
-    align-items: center;
-  }
+  .balance-chevron { margin-left: 7px; display: flex; align-items: center; margin-top: 1px; }
   .balance-eye {
     margin-left: auto;
+    margin-right: -6px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
   .balance-amount {
-    margin-top: 12px;
-    font-size: 54px;
+    margin-top: 10px;
+    font-size: 56px;
     font-weight: 700;
-    letter-spacing: -1.5px;
-    line-height: 1;
+    letter-spacing: -2.2px;
+    line-height: 1.05;
+    font-feature-settings: "tnum";
   }
 
-  /* ---------- Add money / Withdraw ---------- */
-  .action-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 56px;
-    padding: 0 6px;
-  }
+  /* ============ Add money / Withdraw ============ */
+  .action-row { display: flex; gap: 12px; margin-top: 54px; padding: 0 6px; }
   .action-btn {
     flex: 1;
     height: 52px;
-    border: none;
     border-radius: 999px;
-    background: #1d1d1f;
-    color: #fff;
-    font-family: inherit;
+    background: var(--pill);
+    box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.07);
     font-size: 16px;
     font-weight: 700;
-    letter-spacing: -0.2px;
-    cursor: pointer;
+    letter-spacing: -0.3px;
   }
+  .action-btn:active { background: var(--pill-press); }
 
-  /* ---------- Green status card ---------- */
+  /* ============ Green status card ============ */
   .status-card {
-    margin-top: 26px;
-    height: 62px;
+    margin-top: 24px;
+    height: 64px;
     display: flex;
     align-items: center;
     padding: 0 20px;
+    width: 100%;
+    text-align: left;
   }
   .status-card-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 13px;
     font-size: 15px;
     font-weight: 700;
+    letter-spacing: -0.2px;
   }
   .status-card-right {
     margin-left: auto;
     font-size: 13px;
     font-weight: 600;
-    color: #fff;
+    color: #d9d9de;
   }
 
-  /* ---------- Savings card ---------- */
+  /* ============ Savings card ============ */
   .savings-card {
     margin-top: 14px;
     display: flex;
     align-items: center;
     padding: 20px;
+    width: 100%;
+    text-align: left;
   }
-  .savings-info .savings-label {
-    font-size: 15px;
-    font-weight: 700;
-  }
-  .savings-info .savings-amount {
-    margin-top: 6px;
+  .savings-label { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; }
+  .savings-amount {
+    margin-top: 5px;
     font-size: 32px;
     font-weight: 700;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
     line-height: 1.1;
+    font-feature-settings: "tnum";
   }
-  .savings-info .savings-interest {
+  .savings-interest {
     margin-top: 6px;
     font-size: 13px;
     font-weight: 500;
-    color: #7c7c80;
+    color: var(--muted);
+    letter-spacing: -0.1px;
   }
-  .savings-icons {
-    margin-left: auto;
-    display: flex;
-    gap: 10px;
-  }
+  .savings-icons { margin-left: auto; display: flex; gap: 10px; }
   .savings-icon {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #232325;
+    background: #252527;
+    box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.07);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  /* ---------- More for you ---------- */
+  /* ============ More for you ============ */
   .section-title {
     margin-top: 34px;
     padding: 0 6px;
     font-size: 24px;
     font-weight: 700;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.4px;
   }
   .more-sub {
     margin-top: 22px;
     padding: 0 6px;
     font-size: 13px;
     font-weight: 500;
-    color: #7c7c80;
+    color: var(--muted);
   }
   .more-heading {
     margin-top: 6px;
     padding: 0 6px;
     font-size: 30px;
     font-weight: 700;
-    letter-spacing: -0.6px;
+    letter-spacing: -0.8px;
   }
 
-  /* ---------- Floating tab bar ---------- */
+  /* ============ Floating tab bar ============ */
   .tab-bar {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 96px;
+    height: 104px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding: 0 36px 18px 36px;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 38%, #000 100%);
+    padding: 14px 34px 24px 34px;
+    background: linear-gradient(180deg,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0.55) 28%,
+      rgba(0,0,0,0.92) 55%,
+      #000 100%);
   }
   .tab {
-    border: none;
-    background: transparent;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-  }
-  .tab-balance {
     width: 72px;
     height: 44px;
+  }
+  .tab-balance {
     border-radius: 999px;
-    background: #2c2c2e;
-    color: #fff;
-    font-family: inherit;
+    background: #2e2e30;
+    box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.09);
     font-size: 17px;
     font-weight: 700;
+    letter-spacing: -0.3px;
+    font-feature-settings: "tnum";
   }
   .tab-badge {
     position: absolute;
-    top: -4px;
-    right: -7px;
+    top: 0;
+    right: 9px;
     min-width: 18px;
     height: 18px;
     border-radius: 9px;
-    background: #f5402c;
-    color: #fff;
+    background: var(--red);
     font-size: 11px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 4px;
-    border: 2px solid #000;
+    border: 2.5px solid #000;
     box-sizing: content-box;
   }
 </style>
@@ -330,25 +374,27 @@
   <div class="status-bar">
     <span class="status-time">12:06</span>
     <span class="status-right">
-      <!-- cellular bars -->
-      <svg width="19" height="12" viewBox="0 0 19 12" fill="none">
-        <rect x="0"  y="8" width="3" height="4"  rx="1" fill="#fff"/>
-        <rect x="5"  y="5.5" width="3" height="6.5" rx="1" fill="#fff"/>
-        <rect x="10" y="3" width="3" height="9"  rx="1" fill="#fff"/>
-        <rect x="15" y="0" width="3" height="12" rx="1" fill="#5c5c5e"/>
+      <!-- cellular: 3 of 4 bars -->
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+        <rect x="0"    y="7.5" width="3" height="4.5" rx="1" fill="#fff"/>
+        <rect x="4.8"  y="5"   width="3" height="7"   rx="1" fill="#fff"/>
+        <rect x="9.6"  y="2.5" width="3" height="9.5" rx="1" fill="#fff"/>
+        <rect x="14.4" y="0"   width="3" height="12"  rx="1" fill="rgba(255,255,255,0.25)"/>
       </svg>
       <!-- wifi -->
-      <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff">
-        <path d="M8.5 12 6.2 9.6a3.4 3.4 0 0 1 4.6 0L8.5 12Z"/>
-        <path d="M4.4 7.7a6.2 6.2 0 0 1 8.2 0l-1.5 1.6a4.1 4.1 0 0 0-5.2 0L4.4 7.7Z"/>
-        <path d="M.9 4.1a11 11 0 0 1 15.2 0l-1.5 1.6a8.9 8.9 0 0 0-12.2 0L.9 4.1Z"/>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff" aria-hidden="true">
+        <path d="M8 12 5.9 9.75a3.1 3.1 0 0 1 4.2 0L8 12Z"/>
+        <path d="M4.2 7.9a5.7 5.7 0 0 1 7.6 0L10.4 9.4a3.6 3.6 0 0 0-4.8 0L4.2 7.9Z"/>
+        <path d="M.7 4.2a10.6 10.6 0 0 1 14.6 0l-1.4 1.5a8.5 8.5 0 0 0-11.8 0L.7 4.2Z"/>
       </svg>
-      <!-- battery with percentage -->
-      <svg width="30" height="14" viewBox="0 0 30 14">
-        <rect x="0.5" y="0.5" width="26" height="13" rx="3.5" fill="#3a3a3c" stroke="#3a3a3c"/>
-        <rect x="0.5" y="0.5" width="11" height="13" rx="3.5" fill="#9a9a9e"/>
-        <path d="M28 4.5v5a2.7 2.7 0 0 0 0-5Z" fill="#5c5c5e"/>
-        <text x="13" y="10.5" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#fff">32</text>
+      <!-- battery, 32% with numeral inside -->
+      <svg width="31" height="13" viewBox="0 0 31 13" aria-hidden="true">
+        <rect x="0.5" y="0.5" width="27" height="12" rx="4" fill="rgba(120,120,128,0.45)"/>
+        <rect x="0.5" y="0.5" width="10.5" height="12" rx="4" fill="#b9b9bf"/>
+        <path d="M29 4.3v4.4a2.4 2.4 0 0 0 0-4.4Z" fill="rgba(255,255,255,0.4)"/>
+        <text x="14" y="9.8" text-anchor="middle"
+              font-family="-apple-system, 'SF Pro Text', 'Segoe UI', Helvetica, Arial, sans-serif"
+              font-size="9" font-weight="700" fill="#fff">32</text>
       </svg>
     </span>
   </div>
@@ -357,22 +403,60 @@
   <div class="header">
     <h1>Money</h1>
     <div class="header-actions">
-      <button class="icon-btn" aria-label="Search">
-        <svg width="19" height="19" viewBox="0 0 19 19" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
-          <circle cx="8" cy="8" r="6"/>
-          <line x1="12.6" y1="12.6" x2="17" y2="17"/>
+      <button class="icon-btn pressable" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round">
+          <circle cx="7.6" cy="7.6" r="5.9"/>
+          <line x1="12.1" y1="12.1" x2="16.4" y2="16.4"/>
         </svg>
       </button>
-      <button class="avatar" aria-label="Profile"></button>
+      <button class="avatar pressable" aria-label="Profile">
+        <!-- photo-like portrait: warm backlit background, soft-shaded face -->
+        <svg viewBox="0 0 42 42" aria-hidden="true">
+          <defs>
+            <radialGradient id="pbg" cx="38%" cy="28%" r="90%">
+              <stop offset="0%"  stop-color="#b65a3a"/>
+              <stop offset="45%" stop-color="#8a3a26"/>
+              <stop offset="100%" stop-color="#4e1d12"/>
+            </radialGradient>
+            <radialGradient id="pskin" cx="42%" cy="36%" r="75%">
+              <stop offset="0%"  stop-color="#f7cfae"/>
+              <stop offset="70%" stop-color="#e8b18a"/>
+              <stop offset="100%" stop-color="#c98e66"/>
+            </radialGradient>
+            <linearGradient id="phair" x1="0" y1="0" x2="0.4" y2="1">
+              <stop offset="0%"  stop-color="#e8c889"/>
+              <stop offset="100%" stop-color="#b88e4f"/>
+            </linearGradient>
+            <linearGradient id="pshirt" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stop-color="#76281a"/>
+              <stop offset="100%" stop-color="#481408"/>
+            </linearGradient>
+            <filter id="psoft" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="0.55"/>
+            </filter>
+          </defs>
+          <rect width="42" height="42" fill="url(#pbg)"/>
+          <ellipse cx="13" cy="8" rx="11" ry="7" fill="#d27a4a" opacity="0.5" filter="url(#psoft)"/>
+          <g filter="url(#psoft)">
+            <ellipse cx="21" cy="42" rx="15" ry="12" fill="url(#pshirt)"/>
+            <rect x="17.5" y="26" width="7" height="7" fill="url(#pskin)"/>
+            <circle cx="21" cy="20" r="8.6" fill="url(#pskin)"/>
+            <path d="M12.5 19c-0.4-6 3.4-9.6 8.5-9.6s8.9 3.6 8.5 9.6c-0.3-3-1.6-4.4-3.1-5.2-1.2 1.4-3.2 2.1-5.4 2.1s-4.2-0.7-5.4-2.1c-1.5 0.8-2.8 2.2-3.1 5.2Z" fill="url(#phair)"/>
+            <ellipse cx="17.6" cy="20.6" rx="1" ry="1.2" fill="#3c2417"/>
+            <ellipse cx="24.4" cy="20.6" rx="1" ry="1.2" fill="#3c2417"/>
+            <path d="M19 25.4c1.2 0.9 2.8 0.9 4 0" stroke="#a05f3c" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </button>
     </div>
   </div>
 
   <!-- Dimmed row peeking from behind the sheet -->
   <div class="behind-row">
     <span class="locked-pill">
-      <svg width="11" height="13" viewBox="0 0 11 13" fill="#fff">
-        <rect x="0" y="5" width="11" height="8" rx="2"/>
-        <path d="M2.5 6V4a3 3 0 0 1 6 0v2" fill="none" stroke="#fff" stroke-width="1.6"/>
+      <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
+        <rect x="0.5" y="5.5" width="11" height="8" rx="2.2" fill="#fff"/>
+        <path d="M3 6V4.2a3 3 0 0 1 6 0V6" fill="none" stroke="#fff" stroke-width="1.7"/>
       </svg>
       Locked
     </span>
@@ -388,66 +472,93 @@
         <span class="balance-label">Cash balance</span>
         <span class="balance-acct">&bull;&bull; 2456</span>
         <span class="balance-chevron">
-          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="#7c7c80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1.5 1.5 6.5 6.5 1.5 11.5"/>
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" stroke="#8e8e93" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 1l5 5-5 5"/>
           </svg>
         </span>
-        <span class="balance-eye">
-          <svg width="24" height="22" viewBox="0 0 24 22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 11s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 11 2 11Z"/>
-            <circle cx="12" cy="11" r="2.8"/>
-            <line x1="4" y1="20" x2="20" y2="2"/>
+        <button class="balance-eye pressable" id="eyeBtn" aria-label="Hide balance">
+          <svg id="eyeIcon" width="23" height="21" viewBox="0 0 24 22" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2.5 11S6 5.2 12 5.2 21.5 11 21.5 11 18 16.8 12 16.8 2.5 11 2.5 11Z"/>
+            <circle cx="12" cy="11" r="2.7"/>
+            <line x1="5" y1="19.5" x2="19" y2="2.5"/>
           </svg>
-        </span>
+        </button>
       </div>
-      <div class="balance-amount">$3.73</div>
+      <div class="balance-amount" id="balanceAmount">$3.73</div>
     </div>
 
     <!-- Add money / Withdraw -->
     <div class="action-row">
-      <button class="action-btn">Add money</button>
-      <button class="action-btn">Withdraw</button>
+      <button class="action-btn pressable">Add money</button>
+      <button class="action-btn pressable">Withdraw</button>
     </div>
 
     <!-- Green status -->
-    <div class="card status-card">
+    <button class="card status-card pressable">
       <span class="status-card-left">
-        <svg width="14" height="22" viewBox="0 0 14 22" fill="none">
-          <rect x="1" y="1" width="12" height="20" rx="4" stroke="#00d632" stroke-width="2"/>
-          <rect x="4.5" y="13" width="5" height="4.5" rx="1.5" fill="#00d632"/>
+        <svg width="15" height="23" viewBox="0 0 15 23" fill="none" aria-hidden="true">
+          <rect x="1" y="1" width="13" height="21" rx="4.5" stroke="#00d632" stroke-width="2"/>
+          <rect x="4.6" y="13.4" width="5.8" height="4.8" rx="1.6" fill="#00d632"/>
         </svg>
         Green status
       </span>
       <span class="status-card-right">In progress</span>
-    </div>
+    </button>
 
     <!-- Savings -->
-    <div class="card savings-card">
-      <div class="savings-info">
+    <button class="card savings-card pressable">
+      <span class="savings-info">
         <div class="savings-label">Savings</div>
         <div class="savings-amount">$57.71</div>
         <div class="savings-interest">Up to 3.25% interest</div>
-      </div>
-      <div class="savings-icons">
-        <div class="savings-icon">
-          <!-- stack of cash -->
-          <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
-            <rect x="2" y="12" width="20" height="6" rx="1.5" fill="#00d632"/>
-            <rect x="3.5" y="7.5" width="17" height="5" rx="1.5" fill="#00b22a" stroke="#0a0a0a" stroke-width="1"/>
-            <rect x="2" y="2" width="20" height="6" rx="1.5" fill="#00d632" stroke="#0a0a0a" stroke-width="1"/>
-            <circle cx="12" cy="5" r="1.6" fill="#0a0a0a"/>
+      </span>
+      <span class="savings-icons">
+        <span class="savings-icon">
+          <!-- pixel-art cash stack -->
+          <svg width="24" height="24" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
+            <g fill="#00d632">
+              <rect x="3" y="4"  width="18" height="6"/>
+              <rect x="3" y="13" width="18" height="6"/>
+            </g>
+            <g fill="#009424">
+              <rect x="3" y="9"  width="18" height="2"/>
+              <rect x="3" y="18" width="18" height="2"/>
+              <rect x="10" y="5.5" width="4" height="3"/>
+            </g>
+            <rect x="11" y="6" width="2" height="2" fill="#063e12"/>
+            <g fill="#7dffa0">
+              <rect x="3" y="4"  width="18" height="1"/>
+              <rect x="3" y="13" width="18" height="1"/>
+            </g>
           </svg>
-        </div>
-        <div class="savings-icon">
-          <!-- money bag -->
-          <svg width="22" height="24" viewBox="0 0 22 24" fill="none">
-            <path d="M7 6h8l3 5a8 8 0 1 1-14 0l3-5Z" fill="#00d632"/>
-            <path d="M7.5 1.5h7L13 6H9L7.5 1.5Z" fill="#00d632" stroke="#0a0a0a" stroke-width="1"/>
-            <text x="11" y="17.5" text-anchor="middle" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="9" font-weight="800" fill="#0a0a0a">$</text>
+        </span>
+        <span class="savings-icon">
+          <!-- pixel-art money bag -->
+          <svg width="24" height="24" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
+            <g fill="#00d632">
+              <rect x="8"  y="1"  width="8" height="3"/>
+              <rect x="9"  y="4"  width="6" height="3"/>
+              <rect x="6"  y="7"  width="12" height="3"/>
+              <rect x="4"  y="10" width="16" height="9"/>
+              <rect x="6"  y="19" width="12" height="2"/>
+              <rect x="8"  y="21" width="8"  height="2"/>
+            </g>
+            <g fill="#009424">
+              <rect x="8" y="3" width="8" height="1"/>
+              <rect x="4" y="17" width="16" height="2"/>
+            </g>
+            <g fill="#063e12">
+              <rect x="11" y="9"  width="2" height="2"/>
+              <rect x="9"  y="11" width="4" height="2"/>
+              <rect x="11" y="13" width="4" height="2"/>
+              <rect x="11" y="15" width="2" height="2"/>
+              <rect x="9"  y="15" width="2" height="1"/>
+              <rect x="13" y="10" width="2" height="1"/>
+            </g>
           </svg>
-        </div>
-      </div>
-    </div>
+        </span>
+      </span>
+    </button>
 
     <!-- More for you -->
     <div class="section-title">More for you</div>
@@ -457,23 +568,51 @@
 
   <!-- Floating tab bar -->
   <div class="tab-bar">
-    <button class="tab tab-balance">$3</button>
-    <button class="tab" aria-label="Pay">
-      <svg width="26" height="34" viewBox="0 0 26 34" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round">
-        <path d="M19.5 8.5c-1.4-1.6-3.7-2.5-6.2-2.5-3.6 0-6.3 1.9-6.3 4.9 0 6.4 12.6 3.4 12.6 9.6 0 3.1-2.8 5-6.5 5-2.7 0-5.2-1-6.6-2.7"/>
-        <line x1="13" y1="1.5" x2="13" y2="6"/>
-        <line x1="13" y1="25.5" x2="13" y2="32.5"/>
+    <button class="tab tab-balance pressable">$3</button>
+    <button class="tab pressable" aria-label="Pay">
+      <!-- Cash App dollar glyph -->
+      <svg width="25" height="33" viewBox="0 0 26 34" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+        <path d="M19.8 9.2c-1.3-1.8-3.8-2.9-6.6-2.9-3.7 0-6.4 2-6.4 5 0 6.6 13 3.4 13 10 0 3.2-2.9 5.2-6.8 5.2-2.9 0-5.5-1.2-6.9-3"/>
+        <line x1="13" y1="2" x2="13" y2="6.3"/>
+        <line x1="13" y1="26.5" x2="13" y2="32"/>
       </svg>
     </button>
-    <button class="tab" aria-label="Activity">
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round">
-        <circle cx="15" cy="15" r="12.5"/>
-        <path d="M15 8.5V15l4.5 3"/>
+    <button class="tab pressable" aria-label="Activity">
+      <svg width="29" height="29" viewBox="0 0 30 30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="15" cy="15" r="12.3"/>
+        <path d="M15 8.7V15l4.4 2.8"/>
       </svg>
       <span class="tab-badge">4</span>
     </button>
   </div>
 
 </div>
+
+<script>
+  // Eye toggle: hide/show the balance like the real app
+  const eyeBtn = document.getElementById('eyeBtn');
+  const eyeIcon = document.getElementById('eyeIcon');
+  const amount = document.getElementById('balanceAmount');
+  let hidden = false;
+
+  eyeBtn.addEventListener('click', () => {
+    hidden = !hidden;
+    amount.textContent = hidden ? '$••••' : '$3.73';
+    eyeIcon.querySelector('line').style.display = hidden ? 'none' : '';
+    eyeBtn.setAttribute('aria-label', hidden ? 'Show balance' : 'Hide balance');
+  });
+
+  // Live clock in the status bar (starts from the screenshot's 12:06 look,
+  // but ticks with real time so it never reads as a static mock)
+  const timeEl = document.querySelector('.status-time');
+  function tick() {
+    const d = new Date();
+    let h = d.getHours() % 12 || 12;
+    timeEl.textContent = h + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  // Comment the next two lines out if you want it frozen at 12:06 like the photo
+  tick();
+  setInterval(tick, 1000);
+</script>
 </body>
 </html>
