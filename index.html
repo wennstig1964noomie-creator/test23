@@ -102,17 +102,19 @@
   .b-head{color:var(--gray);font-size:13px;font-weight:500;}
   .b-title{color:#6a6a6e;font-size:30px;font-weight:700;letter-spacing:-0.6px;margin-top:3px;}
 
-  .navbar{position:absolute;left:0;right:0;bottom:0;height:78px;background:#000;
-    display:flex;align-items:center;gap:30px;padding:0 32px;}
-  .chip{background:#fff;color:#000;height:40px;border-radius:20px;padding:0 19px;
-    display:flex;align-items:center;font-size:18px;font-weight:700;letter-spacing:-0.5px;}
-  .nav-ico{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;color:#fff;}
-  .nav-ico .dollar{font-size:22px;font-weight:700;}
-  .badge{position:absolute;top:-2px;right:-4px;background:var(--red);color:#fff;min-width:18px;height:18px;
-    border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
-    padding:0 4px;border:2px solid #000;}
-  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-    width:134px;height:5px;border-radius:3px;background:#fff;z-index:5;}
+  /* floating capsule tab bar */
+  .tabbar{position:absolute;left:27px;width:335px;height:68px;bottom:17px;border-radius:34px;
+    background:rgba(26,26,26,.72);border:0.5px solid rgba(255,255,255,.08);
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
+  .tabbar .tab{position:absolute;top:50%;transform:translate(-50%,-50%);
+    display:flex;align-items:center;justify-content:center;color:#b6b6b6;}
+  .tab.chip{left:68px;width:98px;height:58px;border-radius:29px;background:#353435;
+    color:#fff;font-size:19px;font-weight:700;letter-spacing:-0.5px;}
+  .tab.dollar{left:168px;font-size:24px;font-weight:700;}
+  .tab.clock{left:262px;width:34px;height:34px;}
+  .badge{position:absolute;top:-3px;right:-9px;background:#ff3b30;color:#fff;min-width:20px;height:20px;
+    border-radius:10px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    padding:0 5px;line-height:1;}
 </style>
 </head>
 <body>
@@ -225,20 +227,18 @@
       <div class="b-title">Buy and sell</div>
     </div>
 
-    <!-- nav bar -->
-    <div class="navbar">
-      <div class="chip">$3</div>
-      <div class="nav-ico"><span class="dollar">$</span></div>
-      <div class="nav-ico">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
-          <path d="M12 7v5l3.2 2" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- floating capsule tab bar -->
+    <div class="tabbar">
+      <div class="tab chip">$3</div>
+      <div class="tab dollar">$</div>
+      <div class="tab clock">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="#b6b6b6" stroke-width="2"/>
+          <path d="M12 7.2v5l3.3 2" stroke="#b6b6b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <span class="badge">4</span>
       </div>
     </div>
-
-    <div class="home-ind"></div>
   </div>
 </body>
 </html>
