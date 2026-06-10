@@ -5,278 +5,204 @@
   <meta name="viewport" content="width=390, initial-scale=1.0">
   <title>Money</title>
   <style>
-    * {
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
       background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
       color: #fff;
-      min-height: 100vh;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
     }
 
     .phone {
       width: 390px;
       min-height: 844px;
-      background: #0a0a0a;
+      background: #0c0c0c;
       position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
-    /* Status Bar */
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 20px 0;
-      height: 50px;
-    }
-
-    .status-time {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: #fff;
-    }
-
-    .status-icons {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .signal-bars {
-      display: flex;
-      align-items: flex-end;
-      gap: 2px;
-      height: 12px;
-    }
-
-    .signal-bars span {
-      background: #fff;
-      width: 3px;
-      border-radius: 1px;
-    }
-
-    .signal-bars span:nth-child(1) { height: 4px; }
-    .signal-bars span:nth-child(2) { height: 6px; }
-    .signal-bars span:nth-child(3) { height: 9px; }
-    .signal-bars span:nth-child(4) { height: 12px; opacity: 0.3; }
-
-    .wifi-icon {
-      width: 16px;
-      height: 12px;
-      position: relative;
-    }
-
-    .wifi-icon svg {
-      width: 16px;
-      height: 12px;
-    }
-
-    .battery-container {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .battery-pct {
-      font-size: 12px;
-      font-weight: 500;
-      color: #fff;
-    }
-
-    .battery {
-      width: 25px;
-      height: 12px;
-      border: 1.5px solid rgba(255,255,255,0.6);
-      border-radius: 3px;
-      position: relative;
-      padding: 1.5px;
-    }
-
-    .battery::after {
+    /* Subtle top radial glow matching the screenshot */
+    .phone::before {
       content: '';
       position: absolute;
-      right: -5px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 5px;
-      background: rgba(255,255,255,0.4);
-      border-radius: 0 1px 1px 0;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 340px;
+      height: 220px;
+      background: radial-gradient(ellipse at center, rgba(60,60,60,0.45) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .battery-fill {
-      height: 100%;
-      width: 90%;
-      background: #4cd964;
-      border-radius: 1.5px;
-    }
-
-    /* Header */
+    /* ── Header ─────────────────────────────────── */
     .header {
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 20px 16px;
+      padding: 18px 22px 10px;
     }
 
     .header-title {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
       color: #fff;
     }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .search-btn {
-      width: 32px;
-      height: 32px;
+    .header-search {
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* Tab Selector */
-    .tab-selector {
+    /* ── Tab Selector ───────────────────────────── */
+    .tab-bar {
+      position: relative;
+      z-index: 1;
       display: flex;
       align-items: center;
-      margin: 0 20px 16px;
-      background: #1c1c1c;
-      border-radius: 30px;
-      padding: 4px;
+      margin: 4px 22px 14px;
+      background: #1c1c1e;
+      border-radius: 50px;
+      padding: 3px;
       width: fit-content;
-      gap: 4px;
     }
 
     .tab {
-      padding: 7px 18px;
-      border-radius: 25px;
+      padding: 7px 16px;
+      border-radius: 50px;
       font-size: 14px;
       font-weight: 500;
-      cursor: pointer;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      cursor: pointer;
+      line-height: 1;
     }
 
     .tab.active {
-      background: #2e2e2e;
+      background: #3a3a3c;
       color: #fff;
       font-weight: 600;
     }
 
     .tab.inactive {
-      color: rgba(255,255,255,0.6);
-    }
-
-    .lock-icon {
-      font-size: 12px;
-    }
-
-    /* Main scroll area */
-    .main {
-      flex: 1;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    /* Cash Balance Card */
-    .cash-card {
-      background: #1a1a1a;
-      border-radius: 20px;
-      padding: 20px 20px 22px;
-    }
-
-    .cash-balance-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .cash-balance-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 400;
     }
 
-    .cash-dots {
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.75);
+    /* ── Scroll Content ─────────────────────────── */
+    .content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      padding: 0 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
     }
 
-    .cash-acct {
-      font-size: 14px;
-      color: rgba(255,255,255,0.75);
+    /* ── Cash Balance Card ──────────────────────── */
+    .cash-card {
+      background: #1c1c1e;
+      border-radius: 22px;
+      padding: 18px 20px 22px;
     }
 
-    .cash-chevron {
-      font-size: 14px;
-      color: rgba(255,255,255,0.5);
-      margin-left: 2px;
+    .cash-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
     }
 
-    .eye-slash {
-      color: rgba(255,255,255,0.5);
-      font-size: 18px;
+    .cash-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: -0.1px;
+    }
+
+    .cash-label .dots {
+      font-size: 8px;
+      letter-spacing: 3px;
+      line-height: 1;
+      vertical-align: middle;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .cash-label .acct {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .cash-label .chev {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-left: 1px;
+      font-weight: 300;
     }
 
     .cash-amount {
-      font-size: 44px;
+      font-size: 46px;
       font-weight: 700;
-      letter-spacing: -1.5px;
+      letter-spacing: -2px;
       line-height: 1;
       color: #fff;
-      margin-top: 4px;
     }
 
-    /* Action Buttons */
-    .action-buttons {
+    /* Eye-slash icon */
+    .eye-icon {
+      opacity: 0.45;
+    }
+
+    /* ── Action Buttons ─────────────────────────── */
+    .btn-row {
       display: flex;
       gap: 10px;
     }
 
-    .action-btn {
+    .btn {
       flex: 1;
-      background: #1e1e1e;
+      background: #1c1c1e;
       border: none;
-      border-radius: 14px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 17px 10px;
       color: #fff;
       font-size: 15px;
       font-weight: 600;
+      letter-spacing: -0.2px;
       cursor: pointer;
       font-family: inherit;
-      letter-spacing: -0.2px;
+      text-align: center;
     }
 
-    /* Green Status Row */
+    /* ── Green Status Row ───────────────────────── */
     .status-row {
-      background: #1a1a1a;
+      background: #1c1c1e;
       border-radius: 16px;
-      padding: 16px 20px;
+      padding: 15px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -288,334 +214,319 @@
       gap: 10px;
     }
 
-    .green-icon {
+    /* Green phone-shaped icon */
+    .green-badge {
       width: 28px;
       height: 28px;
-      background: #1d3a1f;
-      border-radius: 6px;
+      background: #0f2e13;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
-    .green-icon-inner {
-      width: 10px;
-      height: 16px;
-      background: #30d158;
-      border-radius: 2px;
-      position: relative;
-    }
-
-    .green-icon-inner::before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 4px;
-      background: #1d3a1f;
-      border-radius: 50%;
-    }
-
-    .status-label {
+    .status-text {
       font-size: 15px;
       font-weight: 500;
       color: #fff;
+      letter-spacing: -0.2px;
     }
 
-    .status-progress {
+    .status-sub {
       font-size: 14px;
-      color: rgba(255,255,255,0.5);
       font-weight: 400;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: -0.1px;
     }
 
-    /* Savings Card */
+    /* ── Savings Card ───────────────────────────── */
     .savings-card {
-      background: #1a1a1a;
-      border-radius: 20px;
-      padding: 20px;
+      background: #1c1c1e;
+      border-radius: 22px;
+      padding: 18px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .savings-left {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
     .savings-label {
-      font-size: 14px;
-      color: rgba(255,255,255,0.7);
+      font-size: 13.5px;
       font-weight: 400;
-      margin-bottom: 2px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 3px;
+      letter-spacing: -0.1px;
     }
 
     .savings-amount {
-      font-size: 30px;
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: -0.8px;
+      letter-spacing: -1px;
       color: #fff;
-      line-height: 1.1;
+      line-height: 1.05;
     }
 
     .savings-interest {
       font-size: 12px;
-      color: rgba(255,255,255,0.45);
-      margin-top: 3px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.38);
+      margin-top: 4px;
+      letter-spacing: -0.1px;
     }
 
-    .savings-icons {
+    /* Two overlapping coin/boost icons */
+    .coin-stack {
       display: flex;
-      gap: -6px;
+      align-items: center;
     }
 
-    .savings-coin {
-      width: 40px;
-      height: 40px;
+    .coin {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
+      background: #0f2e13;
+      border: 2px solid #1c1c1e;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      background: #1d3a1f;
-      border: 2px solid #0a0a0a;
+      overflow: hidden;
     }
 
-    .savings-coin:nth-child(2) {
-      margin-left: -10px;
+    .coin:nth-child(2) {
+      margin-left: -12px;
     }
 
-    /* More for you */
-    .more-section {
-      margin-top: 6px;
-    }
-
-    .more-title {
-      font-size: 20px;
+    /* ── More for You ───────────────────────────── */
+    .section-title {
+      font-size: 22px;
       font-weight: 700;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.5px;
       color: #fff;
-      margin-bottom: 14px;
+      padding: 4px 0 2px;
     }
 
-    /* Bottom Bar */
-    .bottom-bar {
-      background: #111;
-      border-top: 1px solid #222;
-      padding: 12px 20px 28px;
+    /* ── Bottom strip (partially visible cards) ─── */
+    .bottom-strip {
+      position: relative;
+      z-index: 1;
+      background: #0c0c0c;
+      border-top: 1px solid #1a1a1a;
+      padding: 12px 14px 8px;
+    }
+
+    .bottom-row {
       display: flex;
       align-items: center;
-      gap: 18px;
-      margin-top: auto;
+      gap: 14px;
     }
 
-    .bottom-chip {
-      background: #252525;
-      border-radius: 25px;
-      padding: 8px 16px;
+    /* "Bito" partially visible text on left edge */
+    .bito-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: -0.1px;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 28px; /* clipped */
+    }
+
+    /* White filled "$3" chip */
+    .active-chip {
+      background: #fff;
+      color: #000;
       font-size: 15px;
-      font-weight: 600;
-      color: #fff;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      border-radius: 50px;
+      padding: 7px 16px;
+      white-space: nowrap;
     }
 
-    .bottom-icon {
+    .bottom-icon-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-    }
-
-    .bottom-icon-badge {
+      width: 38px;
+      height: 38px;
       position: relative;
     }
 
-    .badge {
+    .notif-badge {
       position: absolute;
-      top: -2px;
-      right: -4px;
+      top: -1px;
+      right: -1px;
       background: #ff3b30;
       color: #fff;
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
-      width: 16px;
-      height: 16px;
+      min-width: 15px;
+      height: 15px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1.5px solid #111;
+      border: 1.5px solid #0c0c0c;
+      line-height: 1;
     }
 
-    .bottom-label {
+    .buy-sell-label {
       flex: 1;
       font-size: 17px;
       font-weight: 600;
       letter-spacing: -0.3px;
       color: rgba(255,255,255,0.85);
     }
-
-    /* Gradient overlay at bottom of scroll area */
-    .fade-overlay {
-      position: absolute;
-      bottom: 80px;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, #0a0a0a);
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
-  <div class="phone">
+<div class="phone">
 
-    <!-- Status Bar -->
-    <div class="status-bar">
-      <div class="status-time">12:06</div>
-      <div class="status-icons">
-        <div class="signal-bars">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">Money</div>
+    <div class="header-search">
+      <!-- Search icon -->
+      <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
+        <circle cx="9.5" cy="9.5" r="7" stroke="rgba(255,255,255,0.85)" stroke-width="1.9"/>
+        <path d="M15 15L19 19" stroke="rgba(255,255,255,0.85)" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab active">
+      <!-- Lock icon SVG -->
+      <svg width="11" height="13" viewBox="0 0 11 13" fill="none">
+        <rect x="1.5" y="5" width="8" height="7.2" rx="1.8" stroke="white" stroke-width="1.5"/>
+        <path d="M3.2 5V3.8a2.3 2.3 0 0 1 4.6 0V5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="5.5" cy="8.6" r="1" fill="white"/>
+      </svg>
+      Locked
+    </div>
+    <div class="tab inactive">$BentleeGreen</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+
+    <!-- Cash Balance Card -->
+    <div class="cash-card">
+      <div class="cash-top-row">
+        <div class="cash-label">
+          <span>Cash balance</span>
+          <span class="dots">••</span>
+          <span class="acct">2456</span>
+          <span class="chev">›</span>
         </div>
-        <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
-          <path d="M8 2.5C10.2 2.5 12.2 3.4 13.6 4.9L15 3.4C13.2 1.6 10.7 0.5 8 0.5C5.3 0.5 2.8 1.6 1 3.4L2.4 4.9C3.8 3.4 5.8 2.5 8 2.5Z" fill="white"/>
-          <path d="M8 5.5C9.4 5.5 10.7 6.1 11.6 7L13 5.5C11.7 4.3 10 3.5 8 3.5C6 3.5 4.3 4.3 3 5.5L4.4 7C5.3 6.1 6.6 5.5 8 5.5Z" fill="white"/>
-          <path d="M8 8.5C8.8 8.5 9.5 8.8 10.1 9.3L8 11.5L5.9 9.3C6.5 8.8 7.2 8.5 8 8.5Z" fill="white"/>
+        <!-- Eye-slash icon -->
+        <svg class="eye-icon" width="23" height="17" viewBox="0 0 23 17" fill="none">
+          <path d="M1.5 1.5L21.5 15.5" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+          <path d="M5.5 5.2C3.1 6.7 1.5 8.6 1 9.5c1 1.2 4.8 6.5 10.5 6.5 2 0 3.8-.6 5.3-1.6" stroke="white" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+          <path d="M9.5 2.8C10.2 2.6 10.8 2.5 11.5 2.5c5.7 0 9.5 5.3 10.5 6.5-.5.8-1.6 2.2-3.3 3.5" stroke="white" stroke-width="1.7" stroke-linecap="round" fill="none"/>
+          <path d="M8.6 9.5a2.9 2.9 0 0 0 4.8 2.2M14.3 7.6a2.9 2.9 0 0 0-3.7-.9" stroke="white" stroke-width="1.7" stroke-linecap="round" fill="none"/>
         </svg>
-        <div class="battery-container">
-          <span class="battery-pct">32</span>
-          <div class="battery">
-            <div class="battery-fill" style="width: 32%;"></div>
-          </div>
-        </div>
       </div>
+      <div class="cash-amount">$3.73</div>
     </div>
 
-    <!-- Header -->
-    <div class="header">
-      <div class="header-title">Money</div>
-      <div class="header-right">
-        <div class="search-btn">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="9" cy="9" r="6.5" stroke="white" stroke-width="1.8"/>
-            <path d="M14 14L18 18" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Action Buttons -->
+    <div class="btn-row">
+      <button class="btn">Add money</button>
+      <button class="btn">Withdraw</button>
+    </div>
+
+    <!-- Green Status Row -->
+    <div class="status-row">
+      <div class="status-left">
+        <!-- Green phone/signal icon -->
+        <div class="green-badge">
+          <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
+            <!-- Phone body -->
+            <rect x="2.5" y="0.5" width="9" height="13" rx="2" fill="#32d74b"/>
+            <!-- Screen cutout -->
+            <rect x="4" y="2" width="6" height="7" rx="1" fill="#0f2e13"/>
+            <!-- Home button -->
+            <circle cx="7" cy="11.5" r="1" fill="#0f2e13"/>
+            <!-- Stand/base -->
+            <rect x="5" y="13.5" width="4" height="1.5" rx="0.5" fill="#32d74b"/>
+            <rect x="3" y="15" width="8" height="1.5" rx="0.5" fill="#32d74b"/>
+          </svg>
+        </div>
+        <span class="status-text">Green status</span>
+      </div>
+      <span class="status-sub">In progress</span>
+    </div>
+
+    <!-- Savings Card -->
+    <div class="savings-card">
+      <div>
+        <div class="savings-label">Savings</div>
+        <div class="savings-amount">$57.71</div>
+        <div class="savings-interest">Up to 3.25% interest</div>
+      </div>
+      <!-- Two overlapping coin icons -->
+      <div class="coin-stack">
+        <div class="coin">
+          <!-- Pixel-art style coin / money bag -->
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <ellipse cx="11" cy="14" rx="7" ry="6" fill="#32d74b" opacity="0.9"/>
+            <ellipse cx="11" cy="13.5" rx="5.5" ry="4.5" fill="#0f2e13"/>
+            <text x="11" y="16.5" text-anchor="middle" font-size="7" font-weight="700" fill="#32d74b" font-family="-apple-system,sans-serif">$</text>
+            <ellipse cx="11" cy="7.5" rx="3.5" ry="3" fill="#32d74b" opacity="0.9"/>
+            <rect x="9" y="4" width="4" height="4" rx="0.5" fill="#32d74b" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="coin">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <ellipse cx="11" cy="14" rx="7" ry="6" fill="#32d74b" opacity="0.9"/>
+            <ellipse cx="11" cy="13.5" rx="5.5" ry="4.5" fill="#0f2e13"/>
+            <text x="11" y="16.5" text-anchor="middle" font-size="7" font-weight="700" fill="#32d74b" font-family="-apple-system,sans-serif">$</text>
+            <ellipse cx="11" cy="7.5" rx="3.5" ry="3" fill="#32d74b" opacity="0.9"/>
+            <rect x="9" y="4" width="4" height="4" rx="0.5" fill="#32d74b" opacity="0.6"/>
           </svg>
         </div>
       </div>
     </div>
 
-    <!-- Tab Selector -->
-    <div class="tab-selector">
-      <div class="tab active">
-        <span class="lock-icon">🔒</span>
-        Locked
-      </div>
-      <div class="tab inactive">$BentleeGreen</div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main">
-
-      <!-- Cash Balance Card -->
-      <div class="cash-card">
-        <div class="cash-balance-row">
-          <div class="cash-balance-label">
-            <span>Cash balance</span>
-            <span class="cash-dots">••</span>
-            <span class="cash-acct">2456</span>
-            <span class="cash-chevron">›</span>
-          </div>
-          <div class="eye-slash">
-            <svg width="22" height="16" viewBox="0 0 24 18" fill="none">
-              <path d="M2 2L22 16" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M6.5 5C4.2 6.4 2.5 8.5 2 9c.8 1 4.5 6 10 6 1.8 0 3.4-.5 4.8-1.3" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-              <path d="M9.5 3.3C10.3 3.1 11.1 3 12 3c5.5 0 9.2 5 10 6-.5.7-1.5 2-3 3.2" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-              <circle cx="12" cy="9" r="3" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" fill="none"/>
-            </svg>
-          </div>
-        </div>
-        <div class="cash-amount">$3.73</div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button class="action-btn">Add money</button>
-        <button class="action-btn">Withdraw</button>
-      </div>
-
-      <!-- Green Status Row -->
-      <div class="status-row">
-        <div class="status-left">
-          <div class="green-icon">
-            <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
-              <rect x="3" y="0" width="8" height="14" rx="4" fill="#30d158"/>
-              <rect x="5.5" y="14" width="3" height="6" rx="1.5" fill="#30d158"/>
-              <rect x="2" y="18" width="10" height="2" rx="1" fill="#30d158"/>
-            </svg>
-          </div>
-          <span class="status-label">Green status</span>
-        </div>
-        <span class="status-progress">In progress</span>
-      </div>
-
-      <!-- Savings Card -->
-      <div class="savings-card">
-        <div class="savings-left">
-          <div class="savings-label">Savings</div>
-          <div class="savings-amount">$57.71</div>
-          <div class="savings-interest">Up to 3.25% interest</div>
-        </div>
-        <div class="savings-icons">
-          <div class="savings-coin">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-              <circle cx="13" cy="13" r="13" fill="#1d3a1f"/>
-              <text x="13" y="18" text-anchor="middle" font-size="14" fill="#30d158" font-family="-apple-system,sans-serif" font-weight="700">$</text>
-            </svg>
-          </div>
-          <div class="savings-coin">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
-              <circle cx="13" cy="13" r="13" fill="#1d3a1f"/>
-              <text x="13" y="18" text-anchor="middle" font-size="14" fill="#30d158" font-family="-apple-system,sans-serif" font-weight="700">$</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- More for you -->
-      <div class="more-section">
-        <div class="more-title">More for you</div>
-      </div>
-
-    </div>
-
-    <!-- Fade overlay -->
-    <div class="fade-overlay"></div>
-
-    <!-- Bottom Bar -->
-    <div class="bottom-bar">
-      <div class="bottom-chip">$3</div>
-      <div class="bottom-icon">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="11" r="9" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/>
-          <path d="M11 6v5l3 2" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="bottom-icon bottom-icon-badge" style="position:relative;">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="11" r="9" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/>
-          <path d="M7 11 Q11 6 15 11 Q11 16 7 11Z" fill="rgba(255,255,255,0.7)"/>
-        </svg>
-        <div class="badge">4</div>
-      </div>
-      <div class="bottom-label">Buy and sell</div>
-    </div>
+    <!-- More for you heading -->
+    <div class="section-title">More for you</div>
 
   </div>
+
+  <!-- Bottom strip (partially visible content peek) -->
+  <div class="bottom-strip">
+    <div class="bottom-row">
+      <!-- "Bito" partially clipped on far left -->
+      <div class="bito-label">Bito</div>
+
+      <!-- Active white "$3" chip -->
+      <div class="active-chip">$3</div>
+
+      <!-- Dollar sign icon -->
+      <div class="bottom-icon-btn">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="10" stroke="rgba(255,255,255,0.65)" stroke-width="1.6"/>
+          <text x="11" y="15.5" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(255,255,255,0.65)" font-family="-apple-system,sans-serif">$</text>
+        </svg>
+      </div>
+
+      <!-- Activity / refresh circle icon with badge -->
+      <div class="bottom-icon-btn">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <circle cx="11" cy="11" r="10" stroke="rgba(255,255,255,0.65)" stroke-width="1.6"/>
+          <path d="M7 11a4 4 0 1 0 4-4" stroke="rgba(255,255,255,0.65)" stroke-width="1.5" stroke-linecap="round"/>
+          <polyline points="6.5,8 7,11 10,10.5" stroke="rgba(255,255,255,0.65)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="notif-badge">4</div>
+      </div>
+
+      <!-- "Buy and sell" label -->
+      <div class="buy-sell-label">Buy and sell</div>
+    </div>
+  </div>
+
+</div>
 </body>
 </html>
